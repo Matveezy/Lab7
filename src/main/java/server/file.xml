@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<dragons>
+    <dragonFactory/>
+    <dragon id="8">
+        <name>dragon1</name>
+        <coordinates>
+            <coordinateX>100</coordinateX>
+            <coordinateY>-213.0</coordinateY>
+        </coordinates>
+        <creationDate>2021-12-02</creationDate>
+        <color>RED</color>
+        <cave>
+            <depth>1.0</depth>
+            <numberOfTreasures>1.0</numberOfTreasures>
+        </cave>
+    </dragon>
+    <dragon id="9">
+        <name>sadsamd</name>
+        <coordinates>
+            <coordinateX>100</coordinateX>
+            <coordinateY>-1000.0</coordinateY>
+        </coordinates>
+        <creationDate>2022-01-25</creationDate>
+        <age>4</age>
+        <color>RED</color>
+        <type>FIRE</type>
+        <character>WISE</character>
+        <cave>
+            <depth>4.0</depth>
+            <numberOfTreasures>3.0</numberOfTreasures>
+        </cave>
+    </dragon>
+    <dragon id="10">
+        <name>25</name>
+        <coordinates>
+            <coordinateX>100</coordinateX>
+            <coordinateY>-10000.0</coordinateY>
+        </coordinates>
+        <creationDate>2022-01-25</creationDate>
+        <age>3</age>
+        <color>RED</color>
+        <type>FIRE</type>
+        <character>WISE</character>
+        <cave>
+            <depth>3.0</depth>
+            <numberOfTreasures>2.0</numberOfTreasures>
+        </cave>
+    </dragon>
+    <dragon id="11">
+        <name>sadsad,</name>
+        <coordinates>
+            <coordinateX>-1000</coordinateX>
+            <coordinateY>-100000.0</coordinateY>
+        </coordinates>
+        <creationDate>2022-01-25</creationDate>
+        <age>23</age>
+        <color>RED</color>
+        <type>FIRE</type>
+        <character>WISE</character>
+        <cave>
+            <depth>3.0</depth>
+            <numberOfTreasures>2.0</numberOfTreasures>
+        </cave>
+    </dragon>
+    <dragon id="1">
+        <name>chetkyi_pots</name>
+        <coordinates>
+            <coordinateX>1000</coordinateX>
+            <coordinateY>-1000.0</coordinateY>
+        </coordinates>
+        <creationDate>2022-01-25</creationDate>
+        <age>25</age>
+        <color>BLUE</color>
+        <type>FIRE</type>
+        <character>CHAOTIC</character>
+        <cave>
+            <depth>45.0</depth>
+            <numberOfTreasures>2.0</numberOfTreasures>
+        </cave>
+    </dragon>
+    <dragon id="2">
+        <name>dwa</name>
+        <coordinates>
+            <coordinateX>100</coordinateX>
+            <coordinateY>-1000.0</coordinateY>
+        </coordinates>
+        <creationDate>2022-01-25</creationDate>
+        <age>4</age>
+        <color>RED</color>
+        <type>AIR</type>
+        <character>WISE</character>
+        <cave>
+            <depth>4.0</depth>
+            <numberOfTreasures>20.0</numberOfTreasures>
+        </cave>
+    </dragon>
+</dragons>
