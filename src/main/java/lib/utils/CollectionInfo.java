@@ -26,9 +26,9 @@ public class CollectionInfo {
         if (collectionManager.getDragons().size() == 0) {
             sb.append("Коллекция пуста!" + "\n");
         } else {
-            Collections.sort(collectionManager.getDragons(), (a, b) -> a.getName().compareToIgnoreCase(b.getName()));
             collectionManager.getDragons()
                     .stream()
+                    .sorted((o1 , o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
                     .forEach(value -> sb.append(value + "\n"));
         }
         return sb.toString();
