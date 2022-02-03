@@ -26,9 +26,8 @@ public class PrintUniqueAge implements Command {
     @Override
     public String execute() {
         StringBuilder sb = new StringBuilder();
-        for (Integer ages : createAgeSet()) {
-            sb.append(ages + "\n");
-        }
+        createAgeSet().stream()
+                .forEach(age -> sb.append(age + "\n"));
         String result = sb.toString();
         sb.setLength(0);
         return result;

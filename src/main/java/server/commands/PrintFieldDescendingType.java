@@ -17,9 +17,8 @@ public class PrintFieldDescendingType implements Command {
     public String execute() {
         StringBuilder sb = new StringBuilder();
         LinkedList<Dragon> reverseDragons = collectionManager.reverseCollection();
-        for (Dragon val : reverseDragons) {
-            sb.append(val.getType() + "\n");
-        }
+        reverseDragons.stream()
+                .forEach(dragon -> sb.append(dragon.getType() + "\n"));
         String result = sb.toString();
         sb.setLength(0);
         return result;
