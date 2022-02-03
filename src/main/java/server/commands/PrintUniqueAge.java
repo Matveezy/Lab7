@@ -6,6 +6,7 @@ import server.interfaces.Command;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class PrintUniqueAge implements Command {
     private CollectionManager collectionManager;
@@ -16,10 +17,9 @@ public class PrintUniqueAge implements Command {
     }
 
     private Set<Integer> createAgeSet() {
-        ages = new HashSet<>();
-        for (Dragon dragon : collectionManager.getDragons()) {
-            ages.add(dragon.getAge());
-        }
+        ages = collectionManager.getDragons().stream()
+                .map(Dragon::getAge)
+                .collect(Collectors.toSet());
         return ages;
     }
 
