@@ -180,9 +180,10 @@ public class CollectionManager {
 
     public Dragon findMinDragon() {
         Dragon minDragon = dragons.get(0);
-        for (Dragon vals : dragons) {
-            if (vals.compareTo(minDragon) > 0) minDragon = vals;
-        }
+        minDragon = dragons.stream()
+                .sorted(Dragon::compareTo)
+                .findFirst()
+                .get();
         return minDragon;
     }
 
@@ -201,12 +202,9 @@ public class CollectionManager {
         if (id < 1) {
             return false;
         }
-        for (Dragon vals : this.getDragons()) {
-            if (vals.getId() == id) {
-                return true;
-            }
-        }
-        return false;
+        boolean result = dragons.stream()
+                .anyMatch(val -> val.getId() == id);
+        return result;
     }
 
     public Dragon getElementById(long id) {
