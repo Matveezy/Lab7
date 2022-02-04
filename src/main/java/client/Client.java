@@ -34,11 +34,11 @@ public class Client {
     }
 
     public void run() throws IOException {
-//        System.out.println("Введите номер порта, по которому вы хотите подключиться : ");
-//        int port = Integer.parseInt(scanner.nextLine().trim());
+        System.out.println("Введите номер порта, по которому вы хотите подключиться : ");
+        int port = Integer.parseInt(scanner.nextLine().trim());
         InetAddress InetAddress = Inet4Address.getByName("localhost");
 
-        try (Socket socket = new Socket(InetAddress, 4242);
+        try (Socket socket = new Socket(InetAddress, port);
              Scanner scanner = new Scanner(System.in);
         ) {
             ByteBuffer buffer = ByteBuffer.allocate(65000);
@@ -67,11 +67,11 @@ public class Client {
                     req = scanner.nextLine();
                 }
             }
-        } catch (SocketException var19) {
-            System.err.println("Socket exception!!");
-        } catch (IllegalArgumentException var20) {
+        } catch (SocketException e) {
+            System.err.println("Нет подключения по данному порту!");
+        } catch (IllegalArgumentException e2) {
             System.err.println("Нет соединения с сервером!");
-        } catch (StreamCorruptedException e) {
+        } catch (StreamCorruptedException e3) {
             System.err.println("Нет соединения с сервером!");
         }
     }

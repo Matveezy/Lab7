@@ -47,8 +47,8 @@ public class Server {
         this.collectionManager = new CollectionManager();
         this.commandInvoker = new CommandInvoker(this.collectionManager);
         fileWorker = new FileWorker(collectionManager, collectionManager.getDragonFactory());
-
-
+        System.out.println("Введите номер порта, по которому вы хотите подключиться : ");
+        int port = Integer.parseInt(scanner.nextLine().trim());
         try {
             System.out.println(inputFile);
             File ioFile = new File(inputFile);
@@ -65,14 +65,13 @@ public class Server {
 
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         Selector selector = Selector.open();
-        serverSocketChannel.bind(new InetSocketAddress("localhost", 4242));
+        serverSocketChannel.bind(new InetSocketAddress("localhost", port));
 
         serverSocketChannel.configureBlocking(false);
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
         System.out.println("Сервер запущен!");
 
         ByteBuffer request = ByteBuffer.allocate(65000);
-//        Scanner scanner = new Scanner(System.in);
         while (true) {
             try {
                 selector.selectNow();
