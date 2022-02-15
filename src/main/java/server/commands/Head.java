@@ -16,7 +16,7 @@ public class Head implements Command {
 
     @Override
     public String execute() {
-       if (collectionManager.getSize() != 0){
+       if (!collectionManager.getDragons().isEmpty()){
            head = collectionManager.getDragons().get(0);
            return head.toString();
        }

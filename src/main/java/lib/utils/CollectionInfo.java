@@ -23,7 +23,7 @@ public class CollectionInfo {
 
     public String show(CollectionManager collectionManager) {
         StringBuffer sb = new StringBuffer();
-        if (collectionManager.getDragons().size() == 0) {
+        if (collectionManager.getDragons().isEmpty()) {
             sb.append("Коллекция пуста!" + "\n");
         } else {
             collectionManager.getDragons()

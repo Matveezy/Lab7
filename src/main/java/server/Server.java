@@ -100,6 +100,7 @@ public class Server {
                                 String responseString = commandInvoker.execute(requestFromClient);
                                 response.setBody(responseString);
                                 responseHandler.setResponse(response);
+
                                 request.clear();
                                 key.interestOps(SelectionKey.OP_WRITE);
                             }

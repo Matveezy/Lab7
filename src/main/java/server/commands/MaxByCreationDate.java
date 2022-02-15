@@ -18,7 +18,7 @@ public class MaxByCreationDate implements Command {
 
     @Override
     public String execute() {
-        if (collectionManager.getSize() == 0) {
+        if (collectionManager.getDragons().isEmpty()) {
             return "Коллекция пустая!";
         }
         if (collectionManager.getSize() == 1) {

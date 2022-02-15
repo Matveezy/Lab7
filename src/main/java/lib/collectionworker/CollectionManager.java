@@ -13,14 +13,12 @@ import java.util.stream.Collectors;
 public class CollectionManager {
 
     private LinkedList<Dragon> dragons;
-    private DragonFactory dragonFactory;
     private LocalDate creationCollectionDate;
     private final Lock reentrantLock = new ReentrantLock();
 
     public CollectionManager() {
         creationCollectionDate = LocalDate.now();
         dragons = new LinkedList<Dragon>();
-        dragonFactory = new DragonFactory();
     }
 
 
@@ -54,7 +52,7 @@ public class CollectionManager {
     public String clear(User user) {
         lock();
         List<Dragon> loggedUserDragons = getLoggedUserDragons(user, dragons);
-        if (loggedUserDragons.size() == 0) {
+        if (loggedUserDragons.isEmpty()) {
             reentrantLock.unlock();
             return "У данного пользователя нет добавленных объектов!";
         }
@@ -69,17 +67,7 @@ public class CollectionManager {
 
     /**
      * Вспомогательные методы(геттеры и сеттеры)
-     *
-     * @param list
      */
-
-    public void setDragons(LinkedList<Dragon> list) {
-        dragons = list;
-    }
-
-    public DragonFactory getDragonFactory() {
-        return dragonFactory;
-    }
 
     public int getSize() {
         return dragons.size();
@@ -87,10 +75,6 @@ public class CollectionManager {
 
     public LinkedList<Dragon> getDragons() {
         return dragons;
-    }
-
-    public void setDragonFactory(DragonFactory dragonFactory) {
-        this.dragonFactory = dragonFactory;
     }
 
     public LocalDate getCreationCollectionDate() {
