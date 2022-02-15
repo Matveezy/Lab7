@@ -12,10 +12,6 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.LinkedList;
 
-//TODO
-//Сделать отдельный класс для создания таблиц, если их нет в базе
-//В коллекции и базе ставятся разные айдишники при add , исправить (done)
-
 public class DataBaseManager {
     private static Connection connection = null;
     private static Statement statement = null;
