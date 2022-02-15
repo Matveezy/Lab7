@@ -1,10 +1,7 @@
 package lib.collection;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
-@XmlRootElement(name = "cave")
 public class DragonCave implements Serializable {
 
     private Float depth; //Поле не может быть null
@@ -26,14 +23,12 @@ public class DragonCave implements Serializable {
         return numberOfTreasures;
     }
 
-    @XmlElement
     public void setDepth(Float depth) {
         this.depth = depth;
     }
 
 
 
-    @XmlElement
     public void setNumberOfTreasures(Float numberOfTreasures) {
         this.numberOfTreasures = numberOfTreasures > 0 ? numberOfTreasures : this.numberOfTreasures;
     }

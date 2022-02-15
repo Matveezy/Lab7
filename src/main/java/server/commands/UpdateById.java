@@ -1,7 +1,9 @@
 package server.commands;
 
+import client.user.User;
 import lib.collection.Dragon;
 import lib.collectionworker.CollectionManager;
+import server.database.DataBaseManager;
 import server.interfaces.CommandWithArguments;
 import server.interfaces.CommandWithDragons;
 
@@ -9,6 +11,7 @@ public class UpdateById implements CommandWithDragons, CommandWithArguments {
     private Dragon dragon;
     private CollectionManager collectionManager;
     private String arguments;
+    private User user;
 
     public UpdateById(CollectionManager collectionManager) {
         this.collectionManager = collectionManager;
@@ -18,16 +21,26 @@ public class UpdateById implements CommandWithDragons, CommandWithArguments {
     public String execute() {
         try {
             Dragon dragonFromCollection = collectionManager.getElementById(Long.parseLong(arguments));
+            if (!collectionManager.getLoggedUserDragons(user, collectionManager.getDragons()).stream()
+                    .anyMatch(dragon1 -> dragon1.equals(dragonFromCollection)) || dragonFromCollection == null) {
+                return "У пользователя нет элемента с данным id!";
+            }
             if (dragonFromCollection.getId() == -1) {
                 return "Id не может быть меньше единицы!";
             }
             setChangesToDragon(dragon, dragonFromCollection);
-            return "Значение элемента обновлено!";
-
+            if (DataBaseManager.updateById(dragonFromCollection)) {
+                return "Значение элемента обновлено!";
+            }
         } catch (NumberFormatException e) {
             return "Id должен быть числом!";
         }
+        return "Ошибка обновления";
+    }
 
+    @Override
+    public void setUserArgument(User user) {
+        this.user = user;
     }
 
     @Override

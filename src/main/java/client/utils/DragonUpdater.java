@@ -90,7 +90,7 @@ public class DragonUpdater {
                 System.out.println("Поле cave_number_of_treasures изменено!");
                 break;
             case "stop":
-                System.out.println("Запрос на изменение объекта на сервер отправлен!");
+                System.out.println("Запрос на изменение объекта отправлен на сервер!");
                 break;
             default:
                 System.out.println("Название поля введено неверно!");

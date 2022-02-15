@@ -1,22 +1,21 @@
 package lib.collectionworker;
 
+import client.user.User;
 import lib.collection.*;
-import lib.file.FileWorker;
+import server.database.DataBaseManager;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.time.LocalDate;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Locale;
+import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
-@XmlRootElement(name = "dragons")
 public class CollectionManager {
 
     private LinkedList<Dragon> dragons;
     private DragonFactory dragonFactory;
     private LocalDate creationCollectionDate;
-
+    private final Lock reentrantLock = new ReentrantLock();
 
     public CollectionManager() {
         creationCollectionDate = LocalDate.now();
@@ -29,116 +28,43 @@ public class CollectionManager {
      * Методы , реализующие команды пользователя
      */
 
-
     public void insert(Dragon dragon) {
-        long checkId = dragon.getId();
-        if (checkId == 0) checkId++;
-        boolean isContains = false;
-        for (Dragon val : getDragons()) {
-            if (isElementInCollection(checkId)) ++checkId;
-        }
-        dragon.setId(checkId);
+        lock();
         dragons.add(dragon);
-        getDragonFactory().setId(checkId++);
-    }
-
-
-    public void updateById(long id, String field, String value) {
-        switch (field) {
-            case "name": {
-                if (value.equals("")) throw new NullPointerException();
-                getElementById(id).setName(value);
-                System.out.println("Поле изменено!");
-                break;
-            }
-            case "coordinate_x": {
-                if (value.equals("")) value = null;
-                getElementById(id).getCoordinates().setX(Integer.parseInt(value));
-                System.out.println("Поле изменено!");
-                break;
-            }
-            case "coordinate_y": {
-                if (value.equals("")) value = null;
-                getElementById(id).getCoordinates().setY(Double.parseDouble(value));
-                System.out.println("Поле изменено!");
-                break;
-            }
-            case "age": {
-                if (value.equals("")) {
-                    getElementById(id).setAge(null);
-                }
-                getElementById(id).setAge(Integer.parseInt(value));
-                System.out.println("Поле изменено!");
-                break;
-            }
-            case "color": {
-                getElementById(id).setColor(Color.valueOf(value.toUpperCase(Locale.ROOT)));
-                System.out.println("Поле изменено!");
-                break;
-            }
-
-            case "type": {
-                getElementById(id).setType(DragonType.valueOf(value.toUpperCase(Locale.ROOT)));
-                System.out.println("Поле изменено!");
-                break;
-            }
-
-            case "character": {
-                getElementById(id).setCharacter(DragonCharacter.valueOf(value.toUpperCase(Locale.ROOT)));
-                System.out.println("Поле изменено!");
-                break;
-            }
-
-            case "cave_depth": {
-                if (value.equals("")) throw new NullPointerException();
-                getElementById(id).getCave().setDepth(Float.parseFloat(value));
-                System.out.println("Поле изменено!");
-                break;
-            }
-
-            case "cave_number_of_treasures": {
-                if (value.equals("")) throw new NullPointerException();
-                getElementById(id).getCave().setNumberOfTreasures(Float.parseFloat(value));
-                System.out.println("Поле изменено!");
-                break;
-            }
-            case "stop": {
-                System.out.println("Объект изменен!");
-                break;
-            }
-            default: {
-                System.out.println("Значение поля введено неверно!");
-                break;
-            }
-        }
-
+        reentrantLock.unlock();
     }
 
 
     public boolean removeById(long id) {
+        lock();
         if (id < 1 && id > dragons.size()) {
+            reentrantLock.unlock();
             return false;
         }
-        for (Dragon val : dragons) {
-            if (val.getId() == id) {
-                dragons.remove(val);
-                dragonFactory.setId(dragonFactory.getFirstFreeId(this));
-                return true;
-            }
+        if (DataBaseManager.removeById(id)) {
+            dragons.remove(getElementById(id));
+            reentrantLock.unlock();
+            return true;
         }
+        reentrantLock.unlock();
         return false;
     }
 
 
-    public void clear() {
-        dragons.clear();
-        dragonFactory.setId(1);
-    }
-
-
-    public void save() {
-        FileWorker fileWorker = new FileWorker(this, this.getDragonFactory());
-        fileWorker.saveToXml();
+    public String clear(User user) {
+        lock();
+        List<Dragon> loggedUserDragons = getLoggedUserDragons(user, dragons);
+        if (loggedUserDragons.size() == 0) {
+            reentrantLock.unlock();
+            return "У данного пользователя нет добавленных объектов!";
+        }
+        if (DataBaseManager.clear(user.getUsername())) {
+            dragons.removeAll(loggedUserDragons);
+            reentrantLock.unlock();
+            return "Объекты удалены!";
+        }
+        reentrantLock.unlock();
+        return "Ошибка с базой данных!";
     }
 
     /**
@@ -147,11 +73,9 @@ public class CollectionManager {
      * @param list
      */
 
-    @XmlElement(name = "dragon")
     public void setDragons(LinkedList<Dragon> list) {
         dragons = list;
     }
-
 
     public DragonFactory getDragonFactory() {
         return dragonFactory;
@@ -178,12 +102,27 @@ public class CollectionManager {
      * Вспомогательные методы с более сложной логикой
      */
 
-    public Dragon findMinDragon() {
-        Dragon minDragon = dragons.get(0);
-        minDragon = dragons.stream()
-                .sorted(Dragon::compareTo)
-                .findFirst()
-                .get();
+    public List<Dragon> getLoggedUserDragons(User user, LinkedList<Dragon> allDragons) {
+        lock();
+        List<Dragon> res = allDragons.stream()
+                .filter(dragon -> dragon.getUsername().equals(user.getUsername()))
+                .collect(Collectors.toList());
+        reentrantLock.unlock();
+        return res;
+    }
+
+
+    public Dragon findMinDragon(User user) {
+        lock();
+        Dragon minDragon;
+        Optional<Dragon> maybeMinDragon = dragons.stream()
+                .filter(dragon -> dragon.getUsername().equals(user.getUsername()))
+                .min(Dragon::compareTo)
+                .stream().findFirst();
+        if (maybeMinDragon.isPresent()) {
+            minDragon = maybeMinDragon.get();
+        } else minDragon = null;
+        reentrantLock.unlock();
         return minDragon;
     }
 
@@ -198,25 +137,43 @@ public class CollectionManager {
         return newDragons;
     }
 
-    public boolean isElementInCollection(long id) {
+    public boolean isElementInCollection(long id, User user) {
+        lock();
         if (id < 1) {
+            reentrantLock.unlock();
             return false;
         }
         boolean result = dragons.stream()
+                .filter(dragon -> dragon.getUsername().equals(user.getUsername()))
                 .anyMatch(val -> val.getId() == id);
+        reentrantLock.unlock();
         return result;
     }
 
     public Dragon getElementById(long id) {
+        lock();
         if (id < 1) {
             Dragon dragon = new Dragon();
             dragon.setId(-1);
+            reentrantLock.unlock();
             return dragon;
         }
-        Dragon result = dragons.stream()
+        Dragon result = null;
+        Optional<Dragon> maybeDragon = dragons.stream()
                 .filter(dragon -> dragon.getId() == id)
-                .findFirst()
-                .get();
+                .findFirst();
+        if (maybeDragon.isPresent()) {
+            result = maybeDragon.get();
+        }
+        reentrantLock.unlock();
         return result;
+    }
+
+    private void lock() {
+        while (true) {
+            if (reentrantLock.tryLock()) {
+                return;
+            }
+        }
     }
 }

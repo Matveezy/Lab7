@@ -1,5 +1,6 @@
 package server.commands;
 
+import client.user.User;
 import lib.collection.Dragon;
 import lib.collectionworker.CollectionManager;
 import lib.utils.DateParser;
@@ -8,6 +9,7 @@ import server.interfaces.Command;
 public class MaxByCreationDate implements Command {
     private CollectionManager collectionManager;
     private DateParser dateParser;
+    private User user;
 
     public MaxByCreationDate(CollectionManager collectionManager) {
         this.collectionManager = collectionManager;
@@ -29,6 +31,11 @@ public class MaxByCreationDate implements Command {
     @Override
     public String getDescription() {
         return "Вывести любой объект из коллекции, значение поля creationDate которого является максимальным";
+    }
+
+    @Override
+    public void setUserArgument(User user) {
+        this.user=user;
     }
 
     private Dragon findDragonWithMaxCreationDay(CollectionManager collectionManager) {

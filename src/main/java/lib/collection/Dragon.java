@@ -1,17 +1,9 @@
 package lib.collection;
 
-import lib.file.LocalDateAdapter;
-
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-@XmlRootElement(name = "dragon")
-@XmlType(propOrder = {"id", "name", "coordinates", "creationDate", "age", "color", "type", "character", "cave"})
+
 public class Dragon implements Comparable<Dragon>, Serializable {
 
 
@@ -57,8 +49,33 @@ public class Dragon implements Comparable<Dragon>, Serializable {
         this.cave = cave;
     }
 
+    public Dragon(long id, String name, Coordinates coordinates, LocalDate creationDate, Integer age, Color color, DragonType type, DragonCharacter character, DragonCave cave, String username) {
+        this.id = id;
+        this.name = name;
+        this.coordinates = coordinates;
+        this.creationDate = creationDate;
+        this.age = age;
+        this.color = color;
+        this.type = type;
+        this.character = character;
+        this.cave = cave;
+        this.username = username;
+    }
+
     public Dragon() {
 
+    }
+
+    public Dragon(String name, Coordinates coordinates, LocalDate creationDate, Integer age, Color color, DragonType type, DragonCharacter character, DragonCave cave, String username) {
+        this.name = name;
+        this.coordinates = coordinates;
+        this.creationDate = creationDate;
+        this.age = age;
+        this.color = color;
+        this.type = type;
+        this.character = character;
+        this.cave = cave;
+        this.username = username;
     }
 
     public Dragon(String name, Coordinates coordinates, LocalDate creationDate, Integer age, Color color, DragonType type, DragonCharacter character, DragonCave cave) {
@@ -75,50 +92,38 @@ public class Dragon implements Comparable<Dragon>, Serializable {
         this.id = id;
     }
 
-    @XmlAttribute
     public void setId(long id) {
         this.id = id;
     }
 
-    @XmlElement
     public void setName(String name) {
         this.name = name;
     }
 
-    @XmlElement
     public void setCoordinates(Coordinates coordinates) {
         this.coordinates = coordinates;
     }
 
-    @XmlElement
-    @XmlJavaTypeAdapter(LocalDateAdapter.class)
     public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
     }
 
-    @XmlElement
     public void setAge(Integer age) {
         this.age = age;
     }
 
-    @XmlElement
     public void setColor(Color color) {
         this.color = color;
     }
 
-    @XmlElement
     public void setType(DragonType type) {
         this.type = type;
     }
 
-    @XmlElement
     public void setCharacter(DragonCharacter character) {
         this.character = character;
     }
 
-
-
-        @XmlElement
     public void setCave(DragonCave cave) {
         this.cave = cave;
     }
@@ -159,10 +164,20 @@ public class Dragon implements Comparable<Dragon>, Serializable {
         return cave;
     }
 
+    public String username;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     @Override
     public String toString() {
         return "Dragon{" +
-                " id=" + id +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 ", coordinates=" + coordinates +
                 ", creationDate=" + creationDate +
@@ -171,8 +186,10 @@ public class Dragon implements Comparable<Dragon>, Serializable {
                 ", type=" + type +
                 ", character=" + character +
                 ", cave=" + cave +
+                ", username='" + username + '\'' +
                 '}';
     }
+
 
     @Override
     public int compareTo(Dragon o) {
@@ -185,5 +202,15 @@ public class Dragon implements Comparable<Dragon>, Serializable {
         if (comparingFlag > 0) return 1;
         if (comparingFlag < 0) return -1;
         return 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 }

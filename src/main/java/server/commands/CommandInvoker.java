@@ -54,22 +54,26 @@ public class CommandInvoker {
             UpdateById updateById = new UpdateById(collectionManager);
             updateById.setDragonAgrument(request.getDragon());
             updateById.getArguments(request.getArgument());
+            updateById.setUserArgument(request.getUser());
             response = updateById.execute();
             return response;
         }
         if (commandWithArguments.containsKey(request.getCommand())) {
             CommandWithArguments command;
             command = commandWithArguments.get(request.getCommand());
+            command.setUserArgument(request.getUser());
             command.getArguments(request.getArgument());
             response = command.execute();
         } else if (commandWithoutArguments.containsKey(request.getCommand())) {
             Command command;
             command = commandWithoutArguments.get(request.getCommand());
+            command.setUserArgument(request.getUser());
             response = command.execute();
         } else if (commandWithDragonArguments.containsKey(request.getCommand())) {
             CommandWithDragons command;
             command = commandWithDragonArguments.get(request.getCommand());
             command.setDragonAgrument(request.getDragon());
+            command.setUserArgument(request.getUser());
             response = command.execute();
         }
         return response;

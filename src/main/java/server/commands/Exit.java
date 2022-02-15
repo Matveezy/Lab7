@@ -1,11 +1,13 @@
 package server.commands;
 
+import client.user.User;
 import lib.collectionworker.CollectionManager;
 import server.interfaces.Command;
 
 public class Exit implements Command {
     private CollectionManager collectionManager;
     private String inputFile;
+    private User user;
 
     public Exit(CollectionManager collectionManager, String inputFile) {
         this.collectionManager = collectionManager;
@@ -14,12 +16,16 @@ public class Exit implements Command {
 
     @Override
     public String execute() {
-        collectionManager.save();
         return "Вы отключились от сервера!";
     }
 
     @Override
+    public void setUserArgument(User user) {
+        this.user=user;
+    }
+
+    @Override
     public String getDescription() {
-        return "Завершить программу (без сохранения в файл)";
+        return "Завершить работу программы";
     }
 }

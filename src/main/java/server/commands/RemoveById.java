@@ -1,11 +1,13 @@
 package server.commands;
 
+import client.user.User;
 import lib.collectionworker.CollectionManager;
 import server.interfaces.CommandWithArguments;
 
 public class RemoveById implements CommandWithArguments {
     private String agruments;
     private CollectionManager collectionManager;
+    private User user;
 
     public RemoveById(CollectionManager collectionManager) {
         this.collectionManager = collectionManager;
@@ -16,14 +18,21 @@ public class RemoveById implements CommandWithArguments {
         try {
             long id = Long.parseLong(this.agruments);
             if (id <= 0) return "Некорректно введен id!";
-            if (collectionManager.isElementInCollection(id)) {
-                collectionManager.removeById(id);
-                return "Элемент с id " + id + " успешно удален!";
+            if (!collectionManager.isElementInCollection(id, user)) {
+                return "У пользователя нет объекта с таким id!";
             }
-            return "Элемента с данным id нет в коллекции!";
-        } catch (NumberFormatException e){
+           if (collectionManager.removeById(id)) {
+               return "Элемент с id " + id + " успешно удален!";
+           }
+        } catch (NumberFormatException e) {
             return "Id должен быть числом!";
         }
+        return "";
+    }
+
+    @Override
+    public void setUserArgument(User user) {
+        this.user = user;
     }
 
     @Override

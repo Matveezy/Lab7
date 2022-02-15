@@ -9,6 +9,8 @@ public class Response implements Serializable {
     private static final long serialVersionUID = -2893392192176351154L;
 
     private String body;
+    private boolean isRegistered;
+    private boolean isAuthorized;
 
     public Response() {
     }
@@ -25,10 +27,28 @@ public class Response implements Serializable {
         this.body = body;
     }
 
+    public boolean isRegistered() {
+        return isRegistered;
+    }
+
+    public void setRegistered(boolean registered) {
+        isRegistered = registered;
+    }
+
+    public boolean isAuthorized() {
+        return isAuthorized;
+    }
+
+    public void setAuthorized(boolean authorized) {
+        isAuthorized = authorized;
+    }
+
     @Override
     public String toString() {
         return "Response{" +
                 "body='" + body + '\'' +
+                ", isRegistered=" + isRegistered +
+                ", isAuthorized=" + isAuthorized +
                 '}';
     }
 }

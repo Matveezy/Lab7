@@ -1,5 +1,6 @@
 package client;
 
+import client.user.User;
 import client.utils.DragonUpdater;
 import lib.collection.*;
 import lib.utils.CollectionInfo;
@@ -20,7 +21,7 @@ public class CommandListener {
         this.dragonUpdater = new DragonUpdater();
     }
 
-    public Request getRequestFromCommand(String command) {
+    public Request getRequestFromCommand(String command , User user) {
         String[] com = command.trim().toLowerCase(Locale.ROOT).split("\\s+");
         String[] args = Arrays.copyOfRange(com, 1, com.length);
 
@@ -63,7 +64,8 @@ public class CommandListener {
                         dragonFieldsReader.readColor(),
                         dragonFieldsReader.readDragonType(),
                         dragonFieldsReader.readDragonCharacter(),
-                        dragonFieldsReader.readDragonCave()
+                        dragonFieldsReader.readDragonCave(),
+                        user.getUsername()
                 ));
                 break;
             case "add_if_min":
@@ -76,7 +78,8 @@ public class CommandListener {
                         dragonFieldsReader.readColor(),
                         dragonFieldsReader.readDragonType(),
                         dragonFieldsReader.readDragonCharacter(),
-                        dragonFieldsReader.readDragonCave()
+                        dragonFieldsReader.readDragonCave(),
+                        user.getUsername()
                 ));
                 break;
             case "remove_by_id":
@@ -97,7 +100,8 @@ public class CommandListener {
                         dragonFieldsReader.readColor(),
                         dragonFieldsReader.readDragonType(),
                         dragonFieldsReader.readDragonCharacter(),
-                        dragonFieldsReader.readDragonCave()
+                        dragonFieldsReader.readDragonCave(),
+                        user.getUsername()
                 ));
                 break;
 

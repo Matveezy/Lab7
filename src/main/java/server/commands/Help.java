@@ -1,5 +1,6 @@
 package server.commands;
 
+import client.user.User;
 import server.interfaces.Command;
 import server.interfaces.CommandWithArguments;
 import server.interfaces.CommandWithDragons;
@@ -12,6 +13,7 @@ public class Help implements Command {
     private HashMap<String, Command> commandsWithoutArguments;
     private HashMap<String, CommandWithArguments> commandWithArguments;
     private HashMap<String, CommandWithDragons> commandWithDragonsArgument;
+    private User user;
 
     public Help(HashMap<String, Command> commandsWithoutArguments, HashMap<String, CommandWithArguments> commandWithArguments, HashMap<String, CommandWithDragons> commandWithDragonsArgument) {
         this.commandsWithoutArguments = commandsWithoutArguments;
@@ -31,6 +33,11 @@ public class Help implements Command {
         String response = sb.toString();
         sb.setLength(0);
         return response;
+    }
+
+    @Override
+    public void setUserArgument(User user) {
+        this.user=user;
     }
 
     @Override

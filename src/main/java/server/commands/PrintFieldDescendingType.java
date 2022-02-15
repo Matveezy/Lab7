@@ -1,5 +1,6 @@
 package server.commands;
 
+import client.user.User;
 import lib.collection.Dragon;
 import lib.collectionworker.CollectionManager;
 import server.interfaces.Command;
@@ -8,6 +9,7 @@ import java.util.LinkedList;
 
 public class PrintFieldDescendingType implements Command {
     private CollectionManager collectionManager;
+    private User user;
 
     public PrintFieldDescendingType(CollectionManager collectionManager) {
         this.collectionManager = collectionManager;
@@ -22,6 +24,11 @@ public class PrintFieldDescendingType implements Command {
         String result = sb.toString();
         sb.setLength(0);
         return result;
+    }
+
+    @Override
+    public void setUserArgument(User user) {
+        this.user=user;
     }
 
     @Override

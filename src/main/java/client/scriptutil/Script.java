@@ -3,6 +3,7 @@ package client.scriptutil;
 import client.ClientUtil;
 import client.CommandListener;
 import client.Request;
+import client.user.User;
 
 import java.io.*;
 import java.net.Socket;
@@ -19,13 +20,16 @@ public class Script {
     private CommandListener commandListener;
     private ClientUtil clientUtil;
     private Socket socket;
+    private User user;
 
-    public Script(CommandListener commandListener, ClientUtil clientUtil) {
+    public Script(CommandListener commandListener, ClientUtil clientUtil, User user) {
 
         this.commandListener = commandListener;
         innerScript = new innerScript();
         this.clientUtil = clientUtil;
+        this.user = user;
     }
+
 
     public void executeScript(String command, Socket socket, ByteBuffer buffer) {
         String[] com = command.trim().toLowerCase(Locale.ROOT).split("\\s+");
@@ -46,9 +50,10 @@ public class Script {
                     System.err.println("Попытка рекурсивного вызова скрипта внутри него же!");
                     return;
                 } else if (scrCom[0].equals("execute_script") && scrCom.length != 0 && !innerScript.scriptPath.contains(scrArgs[0])) {
-                    executeScript(str, socket , buffer);
+                    executeScript(str, socket, buffer);
                 }
-                Request request = commandListener.getRequestFromCommand(str);
+                Request request = commandListener.getRequestFromCommand(str, this.user);
+                request.setUser(user);
                 clientUtil.sendRequestToServer(request, socket);
                 System.out.println(clientUtil.receive(socket).getBody());
                 buffer.clear();
@@ -70,5 +75,13 @@ public class Script {
             scriptPath.remove(path);
         }
 
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

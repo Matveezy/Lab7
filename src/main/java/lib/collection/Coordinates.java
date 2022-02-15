@@ -1,10 +1,7 @@
 package lib.collection;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
-@XmlRootElement(name = "coordinates")
 public class Coordinates implements Serializable {
     private Integer x; //Поле не может быть null
     private Double y; //Значение поля должно быть меньше -212, Поле не может быть null
@@ -17,12 +14,10 @@ public class Coordinates implements Serializable {
     public Coordinates() {
     }
 
-    @XmlElement(name = "coordinateX")
     public void setX(Integer x) {
         this.x = x;
     }
 
-    @XmlElement(name = "coordinateY")
     public void setY(Double y) {
         this.y = y <= -212 ? y : this.y;
     }

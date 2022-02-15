@@ -1,5 +1,6 @@
 package client;
 
+import client.user.User;
 import lib.collection.Dragon;
 
 import java.io.Serial;
@@ -10,9 +11,11 @@ public class Request implements Serializable {
     @Serial
     private static final long serialVersionUID = 7923661429084687689L;
 
+    private User user;
     private String command;
     private String argument;
     private Dragon dragon;
+
 
     public Request() {
     }
@@ -31,6 +34,24 @@ public class Request implements Serializable {
         this.dragon = dragon;
     }
 
+    public Request(User user, String command, String argument, Dragon dragon) {
+        this.user = user;
+        this.command = command;
+        this.argument = argument;
+        this.dragon = dragon;
+    }
+
+    public Request(User user) {
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public String getCommand() {
         return command;
