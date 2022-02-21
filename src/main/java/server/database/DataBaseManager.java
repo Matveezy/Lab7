@@ -1,22 +1,26 @@
 package server.database;
 
-import client.Request;
 import client.user.User;
 import lib.collection.*;
 import lib.collectionworker.CollectionManager;
-import org.postgresql.Driver;
 import server.util.ConnectionManager;
 import server.util.DateConverter;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.LinkedList;
 
 public class DataBaseManager {
     private static Connection connection = null;
     private static Statement statement = null;
     private static boolean connected;
-
+    private static final String ADD = "INSERT INTO DRAGONS (username , name , x ,y,date,age,color,type,character,depth,treasures) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+    private static final String LOAD = "SELECT * from public.dragons";
+    private static final String FIND_BY_USERNAME = "SELECT (username) from users WHERE username=?";
+    private static final String INSERT_USER = "INSERT into users (username, password) VALUES (? , ?)";
+    private static final String GET_PASSWORD_BY_USERNAME = "select (password) FROM users where username=?";
+    private static final String DELETE = "DELETE from public.dragons WHERE username=?";
+    private static final String DELETE_BY_ID = "DELETE from public.dragons WHERE id=?";
+    private static final String UPDATE = "UPDATE public.dragons set (name,x,y,age,color,type,character,depth,treasures) = (?,?,?,?,?,?,?,?,?) where id=?";
 
     static {
         connect();
@@ -41,9 +45,8 @@ public class DataBaseManager {
     }
 
     public static boolean addDragon(Dragon dragon, User user) {
-        String SELECT = "INSERT INTO DRAGONS (username , name , x ,y,date,age,color,type,character,depth,treasures) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement preparedStatement = connection.prepareStatement(ADD, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, dragon.getName());
             preparedStatement.setInt(3, dragon.getCoordinates().getX());
@@ -72,9 +75,8 @@ public class DataBaseManager {
     }
 
     public static void load(CollectionManager collectionManager) {
-        String request = "SELECT * from public.dragons";
         try {
-            ResultSet resultSet = getStatement().executeQuery(request);
+            ResultSet resultSet = getStatement().executeQuery(LOAD);
             while (resultSet.next()) {
                 String username = resultSet.getString("username");
                 String name = resultSet.getString("name");
@@ -113,8 +115,7 @@ public class DataBaseManager {
 
     public static boolean isThatUserNameContains(String username) {
         try {
-            String select = "SELECT (username) from users WHERE username=?";
-            PreparedStatement preparedStatement = connection.prepareStatement(select);
+            PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_USERNAME);
             preparedStatement.setString(1, username);
             var resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) return true;
@@ -130,9 +131,8 @@ public class DataBaseManager {
         if (isThatUserNameContains(username)) {
             return false;
         }
-        String select = "INSERT into users (username, password) VALUES (? , ?)";
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(select);
+            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USER);
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, password);
             if (preparedStatement.executeUpdate() != 0) {
@@ -147,8 +147,7 @@ public class DataBaseManager {
     public static String authorize(String username, String password) {
         if (!isThatUserNameContains(username)) return "Пользователя с таким именем нет!";
         try {
-            String select = "select (password) FROM users where username=?";
-            PreparedStatement preparedStatement = connection.prepareStatement(select);
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_PASSWORD_BY_USERNAME);
             preparedStatement.setString(1, username);
             var resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -163,9 +162,8 @@ public class DataBaseManager {
     }
 
     public static boolean clear(String username) {
-        String sql = "DELETE from public.dragons WHERE username=?";
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(DELETE);
             preparedStatement.setString(1, username);
             if (preparedStatement.executeUpdate() != 0) {
                 return true;
@@ -177,9 +175,8 @@ public class DataBaseManager {
     }
 
     public static boolean removeById(Long id) {
-        String sql = "DELETE from public.dragons WHERE id=?";
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_ID);
             preparedStatement.setLong(1, id);
             if (preparedStatement.executeUpdate() != 0) {
                 return true;
@@ -191,9 +188,8 @@ public class DataBaseManager {
     }
 
     public static boolean updateById(Dragon dragon) {
-        String sql = "UPDATE public.dragons set (name,x,y,age,color,type,character,depth,treasures) = (?,?,?,?,?,?,?,?,?) where id=?";
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE);
             preparedStatement.setString(1, dragon.getName());
             preparedStatement.setInt(2, dragon.getCoordinates().getX());
             preparedStatement.setDouble(3, dragon.getCoordinates().getY());
